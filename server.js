@@ -9,7 +9,8 @@ app.use(bodyParser.json());
 // 1. Create (POST)
 app.post('/addData', async (req, res) => {
   try {
-    const { id, name, age } = req.body;
+    const id = new Date().getTime();
+    const { name, age } = req.body;
     const ref = db.ref('users').child(id); // Creating a new node with `id`
     await ref.set({
       name: name,

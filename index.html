@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Realtime Database</title>
+
+    <!-- Firebase SDK (v9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js"></script>
+  </head>
+  <body>
+    <h1>Realtime Database Example</h1>
+    <button id="fetchButton">Fetch Data</button>
+    <div id="data"></div>
+
+    <script type="module">
+      // Step 1: Import Firebase functions (modular approach for v9+)
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js';
+      import {
+        getDatabase,
+        ref,
+        onValue
+      } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js';
+
+      // Step 2: Firebase configuration
+      const firebaseConfig = {
+        apiKey: 'YOUR_API_KEY',
+        authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+        databaseURL: 'https://YOUR_PROJECT_ID.firebaseio.com',
+        projectId: 'YOUR_PROJECT_ID',
+        storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+        messagingSenderId: 'YOUR_SENDER_ID',
+        appId: 'YOUR_APP_ID'
+      };
+
+      // Step 3: Initialize Firebase app
+      const app = initializeApp(firebaseConfig);
+
+      // Step 4: Get a reference to the database
+      const database = getDatabase(app);
+
+      // Step 5: Real-time listener for data changes
+      function fetchData() {
+        const dbRef = ref(database, 'users'); // Adjust the path as needed
+        onValue(dbRef, snapshot => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            displayData(data);
+          } else {
+            console.log('No data available');
+          }
+        });
+      }
+
+      // Step 6: Display data in the HTML
+      function displayData(data) {
+        const dataDiv = document.getElementById('data');
+        dataDiv.innerHTML = JSON.stringify(data, null, 2);
+      }
+
+      // Step 7: Add event listener to the button to fetch data when clicked
+      const fetchButton = document.getElementById('fetchButton');
+      fetchButton.addEventListener('click', fetchData);
+
+      // Automatically fetch data when the page loads, or you can remove this if not needed
+      fetchData(); // This will call the fetchData function immediately to load data
+    </script>
+  </body>
+</html>
